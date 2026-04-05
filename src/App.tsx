@@ -16,13 +16,21 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "auth",
+                path: "register",
                 element: (
                     <AuthLayout title="Registration">
                         <Register />
                     </AuthLayout>
                 ),
             },
+            {
+                path: "login",
+                element: (
+                    <AuthLayout title="Login">
+                        <Login />
+                    </AuthLayout>
+                ),
+            }
         ],
     },
 ]);
