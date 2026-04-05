@@ -1,4 +1,4 @@
-import NavMenuLink from "../Ui/NavMenuLink";
+import NavMenuLink from "./Ui/NavMenuLink";
 
 function Navbar() {
     return (
