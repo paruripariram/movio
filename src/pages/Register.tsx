@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { AtSign, LockKeyhole, User } from "lucide-react";
-import AuthButton from "../components/AuthButton";
+import AuthButton from "../components/Ui/AuthButton";
 import { registerUser } from "../lib/auth.service";
 import { useNavigate } from "react-router";
 import { auth } from "../lib/firebase";
+import AuthInput from "../components/Ui/AuthInput";
 
 function Registration() {
     const navigate = useNavigate();
@@ -34,8 +35,9 @@ function Registration() {
         });
     };
 
-    const handleRegister = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if( loading ) return;
         setLoading(true);
         try {
             await registerUser(
@@ -64,67 +66,11 @@ function Registration() {
             autoComplete="off"
         >
             <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-1">
-                    <label
-                        htmlFor="username-input"
-                        className="text-gray-500 font-bold"
-                    >
-                        username
-                    </label>
-                    <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                        <input
-                            id="username-input"
-                            type="text"
-                            className="auth-input"
-                            placeholder="John Wick"
-                            required
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
+                <AuthInput inputName="username" inputType="text" label="username" value={formData.username} onChange={handleChange} placeholder="John Wick" icon={User}/>
 
-                <div className="flex flex-col gap-1">
-                    <label
-                        htmlFor="email-input"
-                        className="text-gray-500 font-bold"
-                    >
-                        email
-                    </label>
-                    <div className="relative">
-                        <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                        <input
-                            id="email-input"
-                            type="email"
-                            className="auth-input"
-                            placeholder="johnwick@email.com"
-                            required
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <label
-                        htmlFor="password-input"
-                        className="text-gray-500 font-bold"
-                    >
-                        password
-                    </label>
-                    <div className="relative">
-                        <LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                        <input
-                            id="password-input"
-                            type="password"
-                            className="auth-input"
-                            placeholder="••••••••"
-                            required
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
+                <AuthInput inputName="email" inputType="email" label="email" value={formData.email} onChange={handleChange} placeholder="johnwick@email.com" icon={AtSign}/>
+
+                <AuthInput inputName="password" inputType="password" label="password" value={formData.password} onChange={handleChange} placeholder="••••••••" icon={LockKeyhole}/>
             </div>
 
             <AuthButton isLoading={loading}>Sign Up</AuthButton>
