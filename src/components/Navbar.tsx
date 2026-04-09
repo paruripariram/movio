@@ -8,7 +8,7 @@ function Navbar() {
                     <NavMenuLink to={"/"}>Home</NavMenuLink>
                 </li>
                 <li>
-                    <NavMenuLink to={"/auth"}>
+                    <NavMenuLink to={"/login"}>
                         Authorization
                     </NavMenuLink>
                 </li>
