@@ -6,6 +6,9 @@ import AuthLayout from "./components/AuthLayout";
 // import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Collection from "./pages/Collection";
+import Search from "./pages/Search";
+import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
     {
@@ -14,9 +17,15 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: (
-                        <Home />
-                ),
+                element: <Home />,
+            },
+            {
+                path: "collection",
+                element: <Collection />,
+            },
+            {
+                path: "search",
+                element: <Search />,
             },
             {
                 path: "register",
@@ -33,6 +42,10 @@ const router = createBrowserRouter([
                         <Login />
                     </AuthLayout>
                 ),
+            },
+            {
+                path: "profile",
+                element: <Profile />,
             },
         ],
     },

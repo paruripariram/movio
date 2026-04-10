@@ -10,6 +10,7 @@ body {
     --color-primary: #1152d4;
     --color-input-color: #22293d;
     --color-form-color: #171c29;
+    --color-back-link-color: #101b34;
     --shadow-glow: 0 0 15px rgba(17, 82, 212, 0.5);
     --shadow-glow-bold: 0 0 25px rgba(17, 82, 212, 0.8);
 }
@@ -17,5 +18,11 @@ body {
 @layer components {
     .auth-input {
         @apply w-full pl-10 rounded-xl bg-input-color h-12 p-2 text-white caret-primary transition duration-200 ease-in-out placeholder:text-gray-500 focus:ring-2 focus:ring-primary focus:outline-none tracking-widest;
+    }
+}
+
+@layer components {
+    .nav-li {
+        @apply text-xl font-black
     }
 }
