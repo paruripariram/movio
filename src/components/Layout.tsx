@@ -3,9 +3,9 @@ import Navbar from "./Navbar";
 
 function Layout() {
     return (
-        <div className="flex flex-column">
+        <div className="flex">
             <Navbar />
-            <main>
+            <main className="flex-1 min-w-0  ml-70">
                 <Outlet />
             </main>
         </div>

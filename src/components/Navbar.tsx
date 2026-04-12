@@ -26,7 +26,7 @@ function Navbar() {
     const { user, isLoading } = useAuthContext();
 
     return (
-        <nav className="flex flex-col items-center p-5 w-70 bg-form-color shadow-[4px_4px_10px_0px_rgba(0,0,0,0.15)]">
+        <nav className="flex flex-col items-center p-5 w-70 bg-form-color shadow-[4px_4px_10px_0px_rgba(0,0,0,0.15)] fixed">
             <img className="w-25" src={logoMovio} alt="logo" />
             <h1 className="text-primary text-6xl font-extrabold text-center mb-20">
                 Movio
@@ -42,7 +42,7 @@ function Navbar() {
                 ))}
                 {isLoading && (
                     <li className="nav-li">
-                        <div className="block p-3 w-full flex gap-2 rounded-2xl text-gray-500">
+                        <div className="p-3 w-full flex gap-2 rounded-2xl text-gray-500">
                             <LoaderCircle className="animate-spin" />
                             Loading...
                         </div>
