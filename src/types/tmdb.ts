@@ -46,4 +46,10 @@ interface Person {
     profile_path: string | null;
 }
 
+export type Genre = {
+    id: number;
+    name: string;
+}
+export type GenresMap = Record<number, string>;
+
 export type SearchResult = Movie | TVShow | Person;
