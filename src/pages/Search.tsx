@@ -10,10 +10,12 @@ function Search() {
         searchResults,
         isLoading,
         error,
+        setError,
         isDebouncing,
         page,
         setPage,
         hasMore,
+        setRetryCount,
     } = useMovieSearch(searchQuery);
     const { genresMap } = useGenresContext();
 
@@ -30,6 +32,22 @@ function Search() {
                     </aside>
                     <div className="flex-1 min-w-0 flex flex-col">
                         <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 p-6 justify-items-center">
+                            {error && (
+                                <div className="col-span-full flex flex-col items-center py-10 gap-4">
+                                    <p className="flex w-60 h-20 border-zinc-800 text-zinc-400 text-3xl text-center">
+                                        Failed to load results.
+                                    </p>
+                                    <button
+                                        className="bg-primary text-white w-40 h-12 rounded-xl flex items-center justify-center relative disabled:opacity-70 cursor-pointer shadow-glow hover:shadow-glow-bold"
+                                        onClick={() => {
+                                            setError(null);
+                                            setRetryCount((prev) => prev + 1);
+                                        }}
+                                    >
+                                        Try again
+                                    </button>
+                                </div>
+                            )}
                             {searchQuery.trim() === "" && (
                                 <p className="text-gray-500 text-3xl">
                                     Start typing to search for movies, shows,
@@ -39,7 +57,8 @@ function Search() {
                             {searchQuery.trim() !== "" &&
                                 searchResults.length === 0 &&
                                 !isDebouncing &&
-                                !isLoading && (
+                                !isLoading && 
+                                !error && (
                                     <p className="text-gray-500 text-3xl">
                                         No results found for "{searchQuery}".
                                     </p>

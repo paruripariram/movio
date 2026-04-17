@@ -10,8 +10,10 @@ export default function useMovieSearch(searchQuery: string) {
     const [isDebouncing, setIsDebouncing] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
+    const [retryCount, setRetryCount] = useState(0);
 
     useEffect(() => {
+        setError(null);
         async function fetchResults(signal: AbortSignal) {
             setIsDebouncing(false);
             setIsLoading(true);
@@ -47,6 +49,7 @@ export default function useMovieSearch(searchQuery: string) {
         let debounceTimeout: ReturnType<typeof setTimeout>;
         if (searchQuery.trim() === "") {
             setSearchResults([]);
+            setHasMore(false);
             setIsLoading(false);
             setError(null);
             setIsDebouncing(false);
@@ -65,11 +68,11 @@ export default function useMovieSearch(searchQuery: string) {
             clearTimeout(debounceTimeout);
             abortController.abort();
         };
-    }, [searchQuery, page]);
+    }, [searchQuery, page, retryCount]);
 
     useEffect(() => {
         setPage(1);
     }, [searchQuery]);
 
-    return { searchResults, isLoading, error, isDebouncing, page, setPage, hasMore };
+    return { searchResults, isLoading, error, setError, isDebouncing, page, setPage, hasMore, setRetryCount };
 }
