@@ -8,28 +8,24 @@ export default function useMovieSearch(searchQuery: string) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isDebouncing, setIsDebouncing] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setSearchResults([]);
-            setIsLoading(false);
-            setError(null);
-            setIsDebouncing(false);
-            return;
-        }
-        setIsDebouncing(true);
-
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-
-        const debounceTimeout = setTimeout(async () => {
+        async function fetchResults(signal: AbortSignal) {
             setIsDebouncing(false);
             setIsLoading(true);
             try {
                 const query = searchQuery.trim();
                 if (query) {
-                    const data = await search({ query, signal });
-                    setSearchResults(data.results);
+                    const data = await search({ query, page, signal });
+                    console.log("Search results:", data);
+                    if (page === 1) {
+                        setSearchResults(data.results);
+                    } else {
+                        setSearchResults((prev) => [...prev, ...data.results]);
+                    }
+                    setHasMore(page < data.total_pages);
                     setError(null);
                 } else {
                     setSearchResults([]);
@@ -46,12 +42,34 @@ export default function useMovieSearch(searchQuery: string) {
             } finally {
                 setIsLoading(false);
             }
-        }, 500);
+        }
 
+        let debounceTimeout: ReturnType<typeof setTimeout>;
+        if (searchQuery.trim() === "") {
+            setSearchResults([]);
+            setIsLoading(false);
+            setError(null);
+            setIsDebouncing(false);
+            return;
+        }
+
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+        if (page === 1) {
+            setIsDebouncing(true);
+            debounceTimeout = setTimeout(() => fetchResults(signal), 500);
+        } else {
+            fetchResults(signal);
+        }
         return () => {
             clearTimeout(debounceTimeout);
             abortController.abort();
         };
+    }, [searchQuery, page]);
+
+    useEffect(() => {
+        setPage(1);
     }, [searchQuery]);
-    return { searchResults, isLoading, error, isDebouncing, setError };
+
+    return { searchResults, isLoading, error, isDebouncing, page, setPage, hasMore };
 }
