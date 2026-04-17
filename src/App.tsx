@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Collection from "./pages/Collection";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
     {
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "profile",
-                element: <Profile />,
+                element: (
+                    <ProtectedRoute>
+                        <Profile />,
+                    </ProtectedRoute>
+                ),
             },
         ],
     },
