@@ -7,15 +7,13 @@ interface CardProps {
 }
 
 function Card({ item, genres }: CardProps) {
-    const isMedia = item.media_type === "movie" || item.media_type === "tv";
-    const title = item.media_type === "movie" ? item.title : item.name;
-    const posterUrl =
-        item.media_type === "person" ? item.profile_path : item.poster_path;
+    const title = ("title" in item ? item.title : item.name) || "Untitled";
+    const posterUrl = item.poster_path;
     const imageSrc = posterUrl
         ? `https://image.tmdb.org/t/p/w500${posterUrl}`
         : noPoster;
     // const overview = isMedia ? item.overview : "";
-    const voteAverage = isMedia ? item.vote_average : null;
+    const voteAverage = item.vote_average
     return (
         <div className="relative flex max-w-92.5 w-full aspect-2/3 overflow-hidden rounded-4xl cursor-pointer">
             <img

@@ -3,7 +3,7 @@ import type { SearchResult } from "../types";
 import { search } from "../api/movieService";
 import axios from "axios";
 
-export default function useMovieSearch(searchQuery: string) {
+export default function useMovieSearch(searchQuery: string, type: "movie" | "tv") {
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export default function useMovieSearch(searchQuery: string) {
             try {
                 const query = searchQuery.trim();
                 if (query) {
-                    const data = await search({ query, page, signal });
+                    const data = await search({ query, page, type, signal });
                     console.log("Search results:", data);
                     if (page === 1) {
                         setSearchResults(data.results);
@@ -68,11 +68,11 @@ export default function useMovieSearch(searchQuery: string) {
             clearTimeout(debounceTimeout);
             abortController.abort();
         };
-    }, [searchQuery, page, retryCount]);
+    }, [searchQuery, page, retryCount, type]);
 
     useEffect(() => {
         setPage(1);
-    }, [searchQuery]);
+    }, [searchQuery, type]);
 
     return { searchResults, isLoading, error, setError, isDebouncing, page, setPage, hasMore, setRetryCount };
 }

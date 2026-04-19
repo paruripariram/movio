@@ -59,7 +59,7 @@ function Navbar() {
                 {!isLoading && user && (
                     <li className="nav-li">
                         <NavMenuLink to={"/profile"}>
-                            {({ isActive }: { isActive: boolean }) => (
+                            {({ isActive }) => (
                                 <>
                                     <div
                                         className={`w-12 h-12 rounded-full bg-gray-500 text-form-color flex items-center justify-center text-3xl ${

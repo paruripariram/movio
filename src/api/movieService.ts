@@ -1,9 +1,9 @@
 import api from "./axios";
 import type { Genre, GenresMap } from "../types/tmdb";
 
-export const search = async ({query, page = 1, signal}: {query: string, page?: number, signal?: AbortSignal}) => {
-    const response = await api.get("/search/multi", {
-        params: { query, page },
+export const search = async ({query, type='movie', page = 1, signal}: {query: string, type?: string, page?: number, signal?: AbortSignal}) => {
+    const response = await api.get(`/discover/${type}`, {
+        params: { with_text_query: query, page },
         signal
     });
     return response.data;

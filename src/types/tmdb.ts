@@ -34,17 +34,17 @@ interface TVShow {
     vote_count: number;
 }
 
-interface Person {
-    adult: boolean;
-    gender: number;
-    id: number;
-    known_for: (Movie | TVShow)[];
-    known_for_department: string;
-    media_type: "person";
-    name: string;
-    popularity: number;
-    profile_path: string | null;
-}
+// interface Person {
+//     adult: boolean;
+//     gender: number;
+//     id: number;
+//     known_for: (Movie | TVShow)[];
+//     known_for_department: string;
+//     media_type: "person";
+//     name: string;
+//     popularity: number;
+//     profile_path: string | null;
+// }
 
 export type Genre = {
     id: number;
@@ -52,4 +52,4 @@ export type Genre = {
 }
 export type GenresMap = Record<number, string>;
 
-export type SearchResult = Movie | TVShow | Person;
+export type SearchResult = Movie | TVShow;
