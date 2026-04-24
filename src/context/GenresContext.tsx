@@ -6,14 +6,14 @@ import { GenresContext } from "./GenresContext";
 
 
 export function GenresProvider({ children }: { children: React.ReactNode }) {
-    const [genresMap, setGenresMap] = useState<GenresMap>({});
+    const [genresMap, setGenresMap] = useState<GenresMap>({ movieGenres: {}, tvGenres: {} });
 
     useEffect(() => {
         const getGenres = async () => {
             try {
                 const movieGenres = await getMovieGenres();
                 const tvGenres = await getTvGenres();
-                setGenresMap({ ...movieGenres, ...tvGenres });
+                setGenresMap({ movieGenres, tvGenres });
             } catch (error) {
                 console.error("Error fetching genres:", error);
             }

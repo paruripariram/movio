@@ -50,6 +50,9 @@ export type Genre = {
     id: number;
     name: string;
 }
-export type GenresMap = Record<number, string>;
+export type GenresMap = {
+    movieGenres: Record<number, string>;
+    tvGenres: Record<number, string>;
+};
 
 export type SearchResult = Movie | TVShow;

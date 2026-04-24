@@ -3,7 +3,7 @@ import type { SearchResult } from "../types";
 import { search } from "../api/movieService";
 import axios from "axios";
 
-export default function useMovieSearch(searchQuery: string, type: "movie" | "tv") {
+export default function useMovieSearch(searchQuery: string, type: "movie" | "tv", genres: string) {
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -19,8 +19,8 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
             setIsLoading(true);
             try {
                 const query = searchQuery.trim();
-                if (query) {
-                    const data = await search({ query, page, type, signal });
+                // if (query || genres) {
+                    const data = await search({ query, page, type, genres, signal });
                     console.log("Search results:", data);
                     if (page === 1) {
                         setSearchResults(data.results);
@@ -29,9 +29,10 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
                     }
                     setHasMore(page < data.total_pages);
                     setError(null);
-                } else {
-                    setSearchResults([]);
-                }
+                
+                // }else {
+                //     setSearchResults([]);
+                // }
             } catch (error) {
                 if (axios.isCancel(error)) {
                     console.log("Request canceled");
@@ -47,14 +48,14 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
         }
 
         let debounceTimeout: ReturnType<typeof setTimeout>;
-        if (searchQuery.trim() === "") {
-            setSearchResults([]);
-            setHasMore(false);
-            setIsLoading(false);
-            setError(null);
-            setIsDebouncing(false);
-            return;
-        }
+        // if (searchQuery.trim() === "" && !genres) {
+        //     setSearchResults([]);
+        //     setHasMore(false);
+        //     setIsLoading(false);
+        //     setError(null);
+        //     setIsDebouncing(false);
+        //     return;
+        // }
 
         const abortController = new AbortController();
         const signal = abortController.signal;
@@ -68,11 +69,11 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
             clearTimeout(debounceTimeout);
             abortController.abort();
         };
-    }, [searchQuery, page, retryCount, type]);
+    }, [searchQuery, page, retryCount, type, genres]);
 
     useEffect(() => {
         setPage(1);
-    }, [searchQuery, type]);
+    }, [searchQuery, type, genres]);
 
     return { searchResults, isLoading, error, setError, isDebouncing, page, setPage, hasMore, setRetryCount };
 }

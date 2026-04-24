@@ -26,7 +26,7 @@ function Navbar() {
     const { user, isLoading } = useAuthContext();
 
     return (
-        <nav className="flex flex-col items-center p-5 w-70 bg-form-color shadow-[4px_4px_10px_0px_rgba(0,0,0,0.15)] fixed">
+        <nav className="flex flex-col items-center p-5 w-70 bg-form-color shadow-[4px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-br-4xl fixed">
             <img className="w-25" src={logoMovio} alt="logo" />
             <h1 className="text-primary text-6xl font-extrabold text-center mb-20">
                 Movio
