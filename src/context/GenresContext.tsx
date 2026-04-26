@@ -11,8 +11,7 @@ export function GenresProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const getGenres = async () => {
             try {
-                const movieGenres = await getMovieGenres();
-                const tvGenres = await getTvGenres();
+                const [movieGenres, tvGenres] = await Promise.all([getMovieGenres(), getTvGenres()]);
                 setGenresMap({ movieGenres, tvGenres });
             } catch (error) {
                 console.error("Error fetching genres:", error);

@@ -5,13 +5,11 @@ interface GenresContextType {
     genresMap: GenresMap;
 }
 
-export const GenresContext = createContext<GenresContextType>({
-    genresMap: {}
-});
+export const GenresContext = createContext<GenresContextType | undefined>(undefined);
 
 export function useGenresContext() {
     const context = useContext(GenresContext);
-    if(!context) {
+    if(context === undefined) {
         throw new Error("useGenresContext must be used within a GenresProvider");
     }
 

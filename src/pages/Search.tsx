@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Card from "../components/Ui/Card";
 import SearchInput from "../components/Ui/SearchInput";
 import useMovieSearch from "../hooks/useMovieSearch";
@@ -8,11 +7,14 @@ import { useSearchParams } from "react-router";
 import GenreCheckbox from "../components/Ui/GenreCheckbox";
 
 function Search() {
-    const [searchQuery, setSearchQuery] = useState("");
+    // const [searchQuery, setSearchQuery] = useState("");
     const [searchParams, setSearchParams] = useSearchParams({
                 type: "movie",
+                with_text_query: "",
                 with_genres: "",
+
             });
+    const searchQuery = searchParams.get("with_text_query") || "";
     const withGenres = searchParams.get("with_genres") || "";
     const currentType = searchParams.get("type") || "movie";
 
@@ -40,31 +42,27 @@ function Search() {
     const isFirstPageLoading = (isLoading || isDebouncing) && page === 1;
     const { genresMap } = useGenresContext();
 
-
-    useEffect(() => {
-        if (searchParams.get("type") === null) {
-            setSearchParams({
-                type: "movie",
-            });
-        }
-    }, []);
+    function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.set("with_text_query", e.target.value);
+        setSearchParams(nextParams);
+    }
 
     function typeHandler() {
         const newType = searchParams.get("type") === "movie" ? "tv" : "movie";
-        setSearchParams({
-            type: newType,
-            with_genres: "",
-        });
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.set("type", newType);
+        nextParams.set("with_genres", "");
+        setSearchParams(nextParams);
     }
 
     function genreHandler(genreId: number, checked: boolean) {
         const newGenres = checked
             ? [...pickedGenres, genreId]
             : pickedGenres.filter((id) => id !== genreId);
-        setSearchParams({
-            type: currentType,
-            with_genres: newGenres.join(","),
-        });
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.set("with_genres", newGenres.join(","));
+        setSearchParams(nextParams);
     }
 
     return (
@@ -72,7 +70,7 @@ function Search() {
             <div className="flex flex-col gap-10">
                 <SearchInput
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={inputHandler}
                 />
                 <div className="flex">
                     <aside className="bg-form-color shadow-[4px_4px_10px_0px_rgba(0,0,0,0.15)] text-white w-70 h-auto self-start rounded-4xl shrink-0 p-5">

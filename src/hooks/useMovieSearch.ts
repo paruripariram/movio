@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SearchResult } from "../types";
 import { search } from "../api/movieService";
 import axios from "axios";
 
-export default function useMovieSearch(searchQuery: string, type: "movie" | "tv", genres: string) {
+export default function useMovieSearch(
+    searchQuery: string,
+    type: "movie" | "tv",
+    genres: string,
+) {
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -12,24 +16,40 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
     const [hasMore, setHasMore] = useState(false);
     const [retryCount, setRetryCount] = useState(0);
 
+    const currentParams = useRef({ searchQuery, type, genres });
+
     useEffect(() => {
         setError(null);
+        const isFiltersChanged =
+            currentParams.current.type !== type ||
+            currentParams.current.genres !== genres ||
+            currentParams.current.searchQuery !== searchQuery;
+
+        currentParams.current = { searchQuery, type, genres };
+        if (isFiltersChanged && page !== 1) return;
+
         async function fetchResults(signal: AbortSignal) {
             setIsDebouncing(false);
             setIsLoading(true);
             try {
                 const query = searchQuery.trim();
                 // if (query || genres) {
-                    const data = await search({ query, page, type, genres, signal });
-                    console.log("Search results:", data);
-                    if (page === 1) {
-                        setSearchResults(data.results);
-                    } else {
-                        setSearchResults((prev) => [...prev, ...data.results]);
-                    }
-                    setHasMore(page < data.total_pages);
-                    setError(null);
-                
+                const data = await search({
+                    query,
+                    page,
+                    type,
+                    genres,
+                    signal,
+                });
+                console.log("Search results:", data);
+                if (page === 1) {
+                    setSearchResults(data.results);
+                } else {
+                    setSearchResults((prev) => [...prev, ...data.results]);
+                }
+                setHasMore(page < data.total_pages);
+                setError(null);
+
                 // }else {
                 //     setSearchResults([]);
                 // }
@@ -75,5 +95,15 @@ export default function useMovieSearch(searchQuery: string, type: "movie" | "tv"
         setPage(1);
     }, [searchQuery, type, genres]);
 
-    return { searchResults, isLoading, error, setError, isDebouncing, page, setPage, hasMore, setRetryCount };
+    return {
+        searchResults,
+        isLoading,
+        error,
+        setError,
+        isDebouncing,
+        page,
+        setPage,
+        hasMore,
+        setRetryCount,
+    };
 }
