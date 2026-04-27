@@ -26,3 +26,7 @@ export const getTvGenres = async () => {
     }, {});
     return genresMap;
 }
+export const getMediaDetails = async (id: string, type: "movie" | "tv", signal: AbortSignal) => {
+    const response = await api.get(`/${type}/${id}`, {signal});
+    return response.data;
+}
